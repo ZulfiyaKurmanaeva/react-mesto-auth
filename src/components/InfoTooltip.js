@@ -1,4 +1,4 @@
-function InfoTooltip({ name, isOpen, registered, onClose, onOverlayClick }) {
+function InfoTooltip({ name, isOpen, registered, onClose, onOverlayClick, tooltipTitle }) {
     return (
         <div className={`popup popup_type_${name} ${isOpen && "popup_opened"}`} onClick={onOverlayClick}>
             <div className="popup__container">
@@ -11,9 +11,7 @@ function InfoTooltip({ name, isOpen, registered, onClose, onOverlayClick }) {
                         }
                     />
                     <h2 className="popup__title popup__tooltip-title">
-                        {registered
-                            ? "Вы успешно зарегистрировались!"
-                            : `Что-то пошло не так! Попробуйте ещё раз.`}
+                        {tooltipTitle}
                     </h2>
                 </div>
 

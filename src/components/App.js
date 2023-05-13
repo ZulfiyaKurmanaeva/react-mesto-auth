@@ -25,6 +25,7 @@ function App() {
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [tooltipTitle, setTooltipTitle] = useState('');
   const [registered, setRegistered] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -42,23 +43,29 @@ function App() {
     isImagePopupOpen ||
     isInfoTooltipOpen;
 
-
   /*handle userinfo*/
+  useEffect(() => {
+    if (loggedIn === true) {
+      navigate("/");
+    }
+  }, [loggedIn, navigate]);
 
   useEffect(() => {
-    api.getUserInfo()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => console.log(err));
+    if (loggedIn === true) {
+      api.getUserInfo()
+        .then((userInfo) => {
+          setCurrentUser(userInfo);
+        })
+        .catch((err) => console.log(err));
 
-    api.getInitialCards()
-      .then((cardList) => {
-        setCards(cardList);
-      })
-      .catch((err) => console.log(err));
+      api.getInitialCards()
+        .then((cardList) => {
+          setCards(cardList);
+        })
+        .catch((err) => console.log(err));
 
-  }, []);
+    }
+  }, [loggedIn]);
 
   function handleUpdateUser(newUserInfo) {
     setIsLoading(true);
@@ -86,6 +93,11 @@ function App() {
 
   /*handle tokencheck*/
 
+  useEffect(() => {
+    handleTokenCheck()
+    return () => { }
+  }, [])
+
   function handleTokenCheck() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -105,7 +117,6 @@ function App() {
 
   }
 
-
   /*handle authorization*/
 
   function handleRegistration(password, email) {
@@ -115,14 +126,15 @@ function App() {
       .then(() => {
         navigate("/sign-in");
         setRegistered(true);
-        handleTooltipOpen();
+        setTooltipTitle("Вы успешно зарегистрировались!");
       })
       .catch((err) => {
         setRegistered(false);
-        handleTooltipOpen();
+        setTooltipTitle("Что-то пошло не так! Попробуйте ещё раз.");
       })
       .finally(() => {
         setIsLoading(false);
+        handleTooltipOpen();
       });
   }
 
@@ -138,13 +150,14 @@ function App() {
       .then((data) => {
         if (data.token) {
           localStorage.setItem("token", data.token);
-          setUserEmail(email);
-          setLoggedIn(true);
+          handleLogin(email);
           navigate("/");
         }
       })
       .catch((err) => {
         console.log(err);
+        handleTooltipOpen();
+        setTooltipTitle("Что-то пошло не так! Попробуйте ещё раз.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -300,7 +313,7 @@ function App() {
                 />
               }
             />
-            <Route path="*" element={<h1>Not Found</h1>} />
+            <Route path="*" element={<Navigate to={loggedIn ? "/" : "/sign-in"} />} />
           </Routes>
 
           {loggedIn && <Footer />}
@@ -348,6 +361,7 @@ function App() {
           <InfoTooltip
             name="info-tooltip"
             isOpen={isInfoTooltipOpen}
+            tooltipTitle={tooltipTitle}
             registered={registered}
             onClose={closeAllPopups}
             onOverlayClick={closeOnOverlayClick}

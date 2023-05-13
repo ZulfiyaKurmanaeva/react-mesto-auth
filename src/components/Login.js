@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useFormValidation from "../utils/useFormValidation";
 import AuthForm from "./AuthForm";
 
-function Login({ onSubmit, onTokenCheck, onLoading }) {
+function Login({ onSubmit, onLoading }) {
     const { values, errors, isValid, handleChange, setValue, formRef } =
         useFormValidation();
 
@@ -12,8 +12,8 @@ function Login({ onSubmit, onTokenCheck, onLoading }) {
         setValue("password", "");
     }, [setValue]);
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(evt) {
+        evt.preventDefault();
 
         if (isValid) {
             const { password, email } = values;
@@ -25,10 +25,6 @@ function Login({ onSubmit, onTokenCheck, onLoading }) {
             onSubmit(password, email);
         }
     }
-
-    useEffect(() => {
-        onTokenCheck();
-    }, []);
 
     return (
         <AuthForm

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { forwardRef } from "react";
 
 const AuthForm = forwardRef(
-    ({ title, name, onLoading, buttonText, buttonTextOnLoading, linkText = "", handleSubmit, isValid, children },
+    ({ title, name, onLoading, buttonText, buttonTextOnLoading, handleSubmit, isValid, children },
         ref) => {
         return (
             <div className="auth-form">
@@ -22,9 +22,7 @@ const AuthForm = forwardRef(
                     >
                         {isValid && onLoading ? buttonTextOnLoading : buttonText}
                     </button>
-                    <Link to="/sign-in" className="auth-form__link">
-                        {linkText}
-                    </Link>
+                    <p className="auth-form__text">Уже зарегистрированы? <Link to="/sign-in" className="auth-form__link" >Войти</Link></p>
                 </form>
             </div>
         );

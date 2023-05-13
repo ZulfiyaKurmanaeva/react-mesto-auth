@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import useFormValidation from "../utils/useFormValidation";
 import AuthForm from "./AuthForm";
 
-function Register({ onSubmit, onTokenCheck, onLoading }) {
+function Register({ onSubmit, onLoading }) {
     const { values, errors, isValid, formRef, handleChange, setValue } =
         useFormValidation();
 
@@ -19,16 +19,11 @@ function Register({ onSubmit, onTokenCheck, onLoading }) {
         }
     }
 
-    useEffect(() => {
-        onTokenCheck();
-    }, []);
-
     return (
         <AuthForm
             title="Регистрация"
             buttonText="Зарегистрироваться"
             buttonTextOnLoading="Реристрируюсь"
-            linkText="Уже зарегистрированы? Войти"
             handleSubmit={handleSubmit}
             onLoading={onLoading}
             isValid={isValid}
