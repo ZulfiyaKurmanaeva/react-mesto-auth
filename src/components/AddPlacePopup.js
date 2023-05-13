@@ -1,24 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import useFormValidation from "../utils/useFormValidation.js";
 
-function AddPlacePopup({
-    isOpen,
-    onClose,
-    onOverlayClick,
-    onAddPlace,
-    onLoading,
-}) {
-    const { values, errors, isValid, handleChange, setValue, reset, formRef } =
-        useFormValidation();
+function AddPlacePopup({ isOpen, onClose, onOverlayClick, onAddPlace, onLoading }) {
+    const { values, errors, isValid, formRef, handleChange, setValue, reset } = useFormValidation();
 
     useEffect(() => {
         setValue("name", "");
         setValue("link", "");
     }, [isOpen, setValue]);
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(evt) {
+        evt.preventDefault();
         if (isValid) {
             onAddPlace({ name: values.name, link: values.link });
         }
@@ -46,11 +39,10 @@ function AddPlacePopup({
                 value={values["name"] ?? ""}
                 type="text"
                 onChange={handleChange}
-                placeholder="Название"
+                placeholder="Напишите название"
                 minLength="2"
                 maxLength="30"
                 required
-                id="locate-name"
                 className="popup__input popup__input_type_elements-title"
             />
             <span className="elements-title-error popup__input-error">{errors.name}</span>
@@ -59,7 +51,7 @@ function AddPlacePopup({
                 value={values["link"] ?? ""}
                 type="url"
                 onChange={handleChange}
-                placeholder="Ссылка на картинку"
+                placeholder="Введите ссылку на картинку"
                 required
                 id="avatar-link"
                 className="popup__input popup__input_type_elements-link"

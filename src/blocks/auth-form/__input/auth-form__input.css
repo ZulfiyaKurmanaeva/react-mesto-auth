@@ -8,6 +8,15 @@
     padding: 0 0 13px 0;
     width: 100%;
   }
+
+  .auth-form__input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 48px #C0C0C0 inset;
+    
+  }
+
+  ::-webkit-input-placeholder {
+    color: #b1b1b7;
+  }
   
   .auth-form__input:first-of-type {
     margin: 50px 0 0px 0;

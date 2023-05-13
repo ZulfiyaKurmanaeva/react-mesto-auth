@@ -5,3 +5,9 @@
     font-size: 18px;
     font-weight: 500;
   }
+
+  .header__menu-item:hover {
+    cursor: pointer;
+    opacity: .6;
+}
+

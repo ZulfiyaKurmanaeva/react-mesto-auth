@@ -1,12 +1,9 @@
 .header {
     width: 69%;
-    display: flex;
     margin: 0 auto;
-    justify-content: space-between;
     border-bottom: 1px solid rgba(84, 84, 84, 0.7);
     margin-top: 45px;
-    padding-bottom: 41px;
-    
+    padding-bottom: 41px;    
 }
 
 @media screen and (max-width: 1269px) {
@@ -17,7 +14,6 @@
 
 @media screen and (max-width: 600px) {
     .header {
-        margin-top: 28px;
-        padding: 32px 19px 0;
+        margin-top: 28px;        
     }
 }

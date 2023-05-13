@@ -25,7 +25,7 @@ function useFormValidation(initialValues = {}) {
         setErrors({});
     };
 
-    return { values, errors, isValid, handleChange, setValue, reset, formRef };
+    return { values, errors, isValid, formRef, handleChange, setValue, reset };
 }
 
 export default useFormValidation;

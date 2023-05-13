@@ -2,3 +2,12 @@
     display: flex;
     gap: 24px;
   }
+
+  @media screen and (max-width: 600px) {
+    .header__menu {
+        flex-direction: column;
+        gap: 14px;
+        align-items: end;
+        justify-content: flex-start;
+    }
+}

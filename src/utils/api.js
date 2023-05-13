@@ -46,13 +46,6 @@ class Api {
         })
     }
 
-    /*handleLikesCounting(request, id) {
-        return this._request(`${this._url}/cards/${id}/likes`, {
-            method: request,
-            headers: this._headers,
-        })
-    }*/
-
     putLike(id) {
         return this._request(`${this._baseUrl}/cards/${id}/likes`, {
             method: "PUT",
@@ -94,8 +87,6 @@ class Api {
         })
     }
 }
-
-
 
 const api = new Api({
     url: 'https://mesto.nomoreparties.co/v1/cohort-61',

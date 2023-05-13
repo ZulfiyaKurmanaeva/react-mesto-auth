@@ -1,32 +1,22 @@
 import PopupWithForm from "./PopupWithForm.js";
 
-function DeleteCardPopup({
-    card,
-    isOpen,
-    onClose,
-    onOverlayClick,
-    onCardDelete,
-    onTransitionEnd,
-    onLoading,
-}) {
-    function handleSubmit(e) {
-        e.preventDefault();
+function DeleteCardPopup({ card, isOpen, onClose, onLoading, onOverlayClick, onCardDelete }) {
+    function handleSubmit(evt) {
+        evt.preventDefault();
         onCardDelete(card);
     }
 
     return (
         <PopupWithForm
             title="Вы уверены?"
-            name="confirm"
             buttonText="Да"
+            onLoading={onLoading}
             buttonTextOnLoading="Удаление"
+            onSubmit={handleSubmit}
+            isValid="true"
             isOpen={isOpen}
             onClose={onClose}
             onOverlayClick={onOverlayClick}
-            onTransitionEnd={onTransitionEnd}
-            onSubmit={handleSubmit}
-            onLoading={onLoading}
-            isValid="true"
         />
     );
 }

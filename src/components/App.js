@@ -16,7 +16,7 @@ import Footer from "./Footer.js";
 import Login from "./Login.js";
 import Main from "./Main.js";
 
-
+/*constants*/
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -42,6 +42,9 @@ function App() {
     isImagePopupOpen ||
     isInfoTooltipOpen;
 
+
+  /*handle userinfo*/
+
   useEffect(() => {
     api.getUserInfo()
       .then((userInfo) => {
@@ -56,6 +59,109 @@ function App() {
       .catch((err) => console.log(err));
 
   }, []);
+
+  function handleUpdateUser(newUserInfo) {
+    setIsLoading(true);
+    api.setUserInfo(newUserInfo)
+      .then((userInfo) => {
+        setCurrentUser(userInfo);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  }
+
+  function handleUpdateAvatar(newUserAvatar) {
+    setIsLoading(true);
+    api.setUserAvatar(newUserAvatar)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  /*handle tokencheck*/
+
+  function handleTokenCheck() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+
+    auth
+      .getContent(token)
+      .then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          handleLogin(res.data.email);
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+
+  }
+
+
+  /*handle authorization*/
+
+  function handleRegistration(password, email) {
+    setIsLoading(true);
+    auth
+      .register(password, email)
+      .then(() => {
+        navigate("/sign-in");
+        setRegistered(true);
+        handleTooltipOpen();
+      })
+      .catch((err) => {
+        setRegistered(false);
+        handleTooltipOpen();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  function handleLogin(email) {
+    setUserEmail(email);
+    setLoggedIn(true);
+  }
+
+  function handleLoginSubmit(password, email) {
+    setIsLoading(true);
+    auth
+      .authorize(password, email)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          setUserEmail(email);
+          setLoggedIn(true);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    setUserEmail("");
+  }
+
+  function handleTooltipOpen() {
+    setIsInfoTooltipOpen(true);
+  }
+
+  /*handle card close */
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -85,6 +191,31 @@ function App() {
     if (e.target === e.currentTarget) {
       closeAllPopups();
     }
+  }
+
+  /*handle card click/like/delete*/
+
+  function handleAddPlaceSubmit(newCard) {
+    setIsLoading(true);
+    api.createCard(newCard)
+      .then((card) => {
+        setCards([card, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  function handleCardDeleteClick(card) {
+    setIsConfirmPopupOpen(true);
+    setSelectedCard(card);
+  }
+
+  function handleCardImageClick(card) {
+    setIsImagePopupOpen(true);
+    setSelectedCard(card);
   }
 
   function handleCardLike(card) {
@@ -118,132 +249,6 @@ function App() {
     }
   }
 
-  function handleCardDeleteClick(card) {
-    setIsConfirmPopupOpen(true);
-    setSelectedCard(card);
-  }
-
-  function handleCardImageClick(card) {
-    setIsImagePopupOpen(true);
-    setSelectedCard(card);
-  }
-
-  function handleUpdateUser(newUserInfo) {
-    setIsLoading(true);
-    api.setUserInfo(newUserInfo)
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
-  }
-
-  function handleUpdateAvatar(newUserAvatar) {
-    setIsLoading(true);
-    api.setUserAvatar(newUserAvatar)
-      .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-  function handleAddPlaceSubmit(newCard) {
-    setIsLoading(true);
-    api.createCard(newCard)
-      .then((card) => {
-        setCards([card, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-  function handleRegisterSubmit(password, email) {
-    setIsLoading(true);
-    auth
-      .register(password, email)
-      .then(() => {
-        navigate("/sign-in");
-        setRegistered(true);
-        handleTooltipOpen();
-      })
-      .catch((err) => {
-        setRegistered(false);
-        handleTooltipOpen();
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-
-  function handleLogin(email) {
-    setUserEmail(email);
-    setLoggedIn(true);
-  }
-
-  function handleLoginSubmit(password, email) {
-    setIsLoading(true);
-    auth
-      .authorize(password, email)
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          setUserEmail(email);
-          setLoggedIn(true);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-
-  function handleTokenCheck() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
-    }
-
-    auth
-      .getContent(token)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          handleLogin(res.data.email);
-          navigate("/");
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-
-  function handleLogout() {
-    localStorage.removeItem("token");
-    setLoggedIn(false);
-    setUserEmail("");
-  }
-
-  function handleTooltipOpen() {
-    setIsInfoTooltipOpen(true);
-  }
-
-
-  function handleTransitionEnd() {
-    if (!isPopupOpen) {
-      setSelectedCard({});
-    }
-  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -279,7 +284,7 @@ function App() {
               path="/sign-up"
               element={
                 <Register
-                  onSubmit={handleRegisterSubmit}
+                  onSubmit={handleRegistration}
                   onTokenCheck={handleTokenCheck}
                   onLoading={isLoading}
                 />
@@ -295,7 +300,7 @@ function App() {
                 />
               }
             />
-            <Route path="*" element={<h2>Not Found</h2>} />
+            <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
 
           {loggedIn && <Footer />}
@@ -329,7 +334,6 @@ function App() {
             isOpen={isImagePopupOpen}
             onClose={closeAllPopups}
             onOverlayClick={closeOnOverlayClick}
-            onTransitionEnd={handleTransitionEnd}
           />
 
           <DeleteCardPopup
@@ -337,7 +341,6 @@ function App() {
             isOpen={isConfirmPopupOpen}
             onClose={closeAllPopups}
             onOverlayClick={closeOnOverlayClick}
-            onTransitionEnd={handleTransitionEnd}
             onCardDelete={handleCardDelete}
             onLoading={isLoading}
           />
@@ -348,11 +351,10 @@ function App() {
             registered={registered}
             onClose={closeAllPopups}
             onOverlayClick={closeOnOverlayClick}
-            onTransitionEnd={handleTransitionEnd}
           />
         </div>
       </div>
-    </CurrentUserContext.Provider>
+    </CurrentUserContext.Provider >
   );
 }
 

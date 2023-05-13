@@ -1,43 +1,22 @@
-import { Link, Routes, Route } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
+import { Navbar, Container, NavbarBrand } from "react-bootstrap";
 
 function Header({ userEmail, isLoggedIn, onLogout }) {
     return (
         <header className="header">
-            <div className="header__logo"></div>
-            <div className="header__menu">
-                {isLoggedIn ? <p className="header__menu-item">{userEmail}</p> : ""}
-
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Link
-                                to="/sign-in"
-                                className="header__menu-item"
-                                onClick={onLogout}
-                            >
-                                Выйти
-                            </Link>
-                        }
-                    />
-                    <Route
-                        path="/sign-in"
-                        element={
-                            <Link to="/sign-up" className="header__menu-item">
-                                Регистрация
-                            </Link>
-                        }
-                    />
-                    <Route
-                        path="/sign-up"
-                        element={
-                            <Link to="/sign-in" className="header__menu-item">
-                                Войти
-                            </Link>
-                        }
-                    />
-                </Routes>
-            </div>
+            <Navbar >
+                <Container className="header__navbar-container">
+                    <NavbarBrand className="header__logo" />
+                    <div className="header__menu">
+                        {isLoggedIn ? <p className="header__menu-item">{userEmail}</p> : ""}
+                        <Routes>
+                            <Route path="/" element={<NavLink to="/sign-in" className="header__menu-item" onClick={onLogout}>Выйти</NavLink>} />
+                            <Route path="/sign-in" element={<NavLink to="/sign-up" className="header__menu-item">Регистрация</NavLink>} />
+                            <Route path="/sign-up" element={<NavLink to="/sign-in" className="header__menu-item">Войти</NavLink>} />
+                        </Routes>
+                    </div>
+                </Container>
+            </Navbar>
         </header>
     );
 }

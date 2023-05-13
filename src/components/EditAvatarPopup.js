@@ -3,22 +3,16 @@ import { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 import useFormValidation from "../utils/useFormValidation.js";
 
-function EditAvatarPopup({
-    isOpen,
-    onClose,
-    onOverlayClick,
-    onUpdateAvatar,
-    onLoading,
-}) {
-    const { values, errors, isValid, handleChange, setValue, reset, formRef } =
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading, onOverlayClick }) {
+    const { values, errors, isValid, formRef, handleChange, setValue, reset } =
         useFormValidation();
 
     useEffect(() => {
         setValue("avatar", "");
     }, [isOpen, setValue]);
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(evt) {
+        evt.preventDefault();
         if (isValid) {
             onUpdateAvatar({ avatar: values.avatar });
         }
@@ -32,7 +26,6 @@ function EditAvatarPopup({
     return (
         <PopupWithForm
             title="Обновить аватар"
-            name="update_avatar"
             isOpen={isOpen}
             onClose={onClosePopup}
             onOverlayClick={onOverlayClick}
@@ -46,8 +39,7 @@ function EditAvatarPopup({
                 value={values["avatar"] ?? ""}
                 type="url"
                 onChange={handleChange}
-                placeholder="Ссылка на картинку"
-                id="image-link"
+                placeholder="Введите ссылку на картинку"
                 className="popup__input popup__input_place_image"
                 required
             />

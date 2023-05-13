@@ -2,39 +2,23 @@ import { Link } from "react-router-dom";
 import { forwardRef } from "react";
 
 const AuthForm = forwardRef(
-    (
-        {
-            title,
-            name,
-            buttonText,
-            buttonTextOnLoading,
-            linkText = "",
-            handleSubmit,
-            isValid,
-            onLoading,
-            children,
-        },
-        ref
-    ) => {
+    ({ title, name, onLoading, buttonText, buttonTextOnLoading, linkText = "", handleSubmit, isValid, children },
+        ref) => {
         return (
             <div className="auth-form">
                 <form
-                    action="#"
+                    className="auth-form__item"
                     name={name}
                     onSubmit={handleSubmit}
-                    noValidate
-                    className="auth-form__item"
+                    action="#"
                     ref={ref}
+                    noValidate
                 >
                     <h2 className="auth-form__title">{title}</h2>
-
                     {children}
-
                     <button
                         type="submit"
-                        aria-label=""
-                        className={`auth-form__button ${!isValid && "auth-form__button_disabled"
-                            }`}
+                        className={`auth-form__button ${!isValid && "auth-form__button_disabled"}`}
                     >
                         {isValid && onLoading ? buttonTextOnLoading : buttonText}
                     </button>
@@ -46,6 +30,5 @@ const AuthForm = forwardRef(
         );
     }
 );
-
 
 export default AuthForm;

@@ -4,16 +4,9 @@ import PopupWithForm from "./PopupWithForm.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import useFormValidation from "../utils/useFormValidation.js";
 
-function EditProfilePopup({
-    isOpen,
-    onClose,
-    onOverlayClick,
-    onUpdateUser,
-    onLoading,
-}) {
-    const { values, errors, isValid, handleChange, setValue, reset, formRef } =
+function EditProfilePopup({ isOpen, onClose, onLoading, onOverlayClick, onUpdateUser }) {
+    const { values, errors, isValid, formRef, handleChange, setValue, reset } =
         useFormValidation();
-
     const currentUser = useContext(CurrentUserContext);
 
     useEffect(() => {
@@ -21,8 +14,8 @@ function EditProfilePopup({
         setValue("about", currentUser.about);
     }, [currentUser, isOpen, setValue]);
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(evt) {
+        evt.preventDefault();
 
         if (isValid) {
             onUpdateUser({
@@ -40,13 +33,12 @@ function EditProfilePopup({
     return (
         <PopupWithForm
             title="Редактировать профиль"
-            name="content_profile"
             isOpen={isOpen}
+            onLoading={onLoading}
+            isValid={isValid}
             onClose={onClosePopup}
             onOverlayClick={onOverlayClick}
             onSubmit={handleSubmit}
-            onLoading={onLoading}
-            isValid={isValid}
             ref={formRef}
         >
             <input
@@ -54,7 +46,7 @@ function EditProfilePopup({
                 value={values["name"] ?? ""}
                 onChange={handleChange}
                 type="text"
-                placeholder="Ваше имя"
+                placeholder="Напишите Ваше имя"
                 minLength="2"
                 maxLength="40"
                 required
@@ -67,7 +59,7 @@ function EditProfilePopup({
                 value={values["about"] ?? ""}
                 onChange={handleChange}
                 type="text"
-                placeholder="Пожалуйста, напишите о себе"
+                placeholder="Расскажите немного о себе"
                 minLength="2"
                 maxLength="200"
                 required
