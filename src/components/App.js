@@ -16,6 +16,9 @@ import Footer from "./Footer.js";
 import Login from "./Login.js";
 import Main from "./Main.js";
 
+import resolve from '../images/success.png';
+import reject from '../images/failed.png';
+
 /*constants*/
 
 function App() {
@@ -26,6 +29,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [tooltipTitle, setTooltipTitle] = useState('');
+  const [tooltipImage, setTooltipImage] = useState('');
   const [registered, setRegistered] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -51,7 +55,7 @@ function App() {
   }, [loggedIn, navigate]);
 
   useEffect(() => {
-    if (loggedIn === true) {
+    if (loggedIn) {
       api.getUserInfo()
         .then((userInfo) => {
           setCurrentUser(userInfo);
@@ -126,10 +130,12 @@ function App() {
       .then(() => {
         navigate("/sign-in");
         setRegistered(true);
+        setTooltipImage(resolve);
         setTooltipTitle("Вы успешно зарегистрировались!");
       })
       .catch((err) => {
         setRegistered(false);
+        setTooltipImage(reject);
         setTooltipTitle("Что-то пошло не так! Попробуйте ещё раз.");
       })
       .finally(() => {
@@ -157,6 +163,7 @@ function App() {
       .catch((err) => {
         console.log(err);
         handleTooltipOpen();
+        setTooltipImage(reject);
         setTooltipTitle("Что-то пошло не так! Попробуйте ещё раз.");
       })
       .finally(() => {
@@ -262,7 +269,6 @@ function App() {
     }
   }
 
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -361,6 +367,7 @@ function App() {
           <InfoTooltip
             name="info-tooltip"
             isOpen={isInfoTooltipOpen}
+            tooltipImage={tooltipImage}
             tooltipTitle={tooltipTitle}
             registered={registered}
             onClose={closeAllPopups}

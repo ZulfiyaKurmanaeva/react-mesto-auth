@@ -1,14 +1,10 @@
-function InfoTooltip({ name, isOpen, registered, onClose, onOverlayClick, tooltipTitle }) {
+function InfoTooltip({ name, isOpen, registered, onClose, onOverlayClick, tooltipTitle, tooltipImage }) {
     return (
         <div className={`popup popup_type_${name} ${isOpen && "popup_opened"}`} onClick={onOverlayClick}>
             <div className="popup__container">
                 <div className="popup__tooltip-content">
                     <img className="popup__tooltip-image"
-                        src={
-                            registered
-                                ? require("../images/success.png")
-                                : require("../images/failed.png")
-                        }
+                        src={tooltipImage}
                     />
                     <h2 className="popup__title popup__tooltip-title">
                         {tooltipTitle}
